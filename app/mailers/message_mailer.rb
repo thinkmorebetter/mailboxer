@@ -3,18 +3,18 @@ class MessageMailer < ActionMailer::Base
   #Sends and email for indicating a new message or a reply to a receiver. 
   #It calls new_message_email if notifing a new message and reply_message_email
   #when indicating a reply to an already created conversation.
-  def send_email(message,receiver)    
+  def send_email(message, receiver, options)    
     if message.conversation.messages.size > 1 
-      reply_message_email(message,receiver)
+      reply_message_email(message, receiver, options)
     else
-      new_message_email(message,receiver)
+      new_message_email(message, receiver, options)
     end
   end
   
   include ActionView::Helpers::SanitizeHelper
 
   #Sends an email for indicating a new message for the receiver
-  def new_message_email(message,receiver)
+  def new_message_email(message, receiver, options)
     @message = message
     @receiver = receiver
     subject = message.subject.to_s
@@ -26,7 +26,7 @@ class MessageMailer < ActionMailer::Base
   end
 
   #Sends and email for indicating a reply in an already created conversation
-  def reply_message_email(message,receiver)
+  def reply_message_email(message, receiver, options)
     @message = message
     @receiver = receiver
     subject = message.subject.to_s

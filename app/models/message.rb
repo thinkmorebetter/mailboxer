@@ -21,7 +21,7 @@ class Message < Notification
 
   #Delivers a Message. USE NOT RECOMENDED.
   #Use Mailboxer::Models::Message.send_message instead.
-  def deliver(reply = false, should_clean = true)
+  def deliver(reply = false, should_clean = true, options = nil)
     self.clean if should_clean
     temp_receipts = Array.new
     #Receiver receipts
@@ -49,7 +49,7 @@ class Message < Notification
         if Mailboxer.uses_emails
           email_to = r.send(Mailboxer.email_method,self)
           unless email_to.blank?
-            MessageMailer.send_email(self,r).deliver
+            MessageMailer.send_email(self,r,options).deliver
           end
         end
       end
