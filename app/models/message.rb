@@ -44,9 +44,9 @@ class Message < Notification
     temp_receipts.each(&:valid?)
     if temp_receipts.all? { |t| t.errors.empty? }
       temp_receipts.each(&:save!) 	#Save receipts
-      self.recipients.each do |r|
       #Should send an email?
-        if Mailboxer.uses_emails
+      if Mailboxer.uses_emails && (options.nil? || !options[:skip_email] )
+        self.recipients.each do |r|
           email_to = r.send(Mailboxer.email_method,self)
           unless email_to.blank?
             MessageMailer.send_email(self,r,options).deliver
